@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculadora de notas - Mi Mundo del Fútbol</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #001b12 0%, #003f2d 50%, #001a0d 100%);
+      position: relative;
+      overflow-x: hidden;
+      color: #F8FAFC;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 30% 20%, rgba(0, 212, 98, 0.04) 0%, transparent 50%),
+        radial-gradient(ellipse at 70% 80%, rgba(255, 215, 0, 0.03) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .estrella {
+      position: fixed;
+      pointer-events: none;
+      z-index: 0;
+      color: rgba(255, 215, 0, 0.06);
+      font-size: 20px;
+      animation: destellar 3s ease-in-out infinite alternate;
+    }
+    .estrella:nth-child(1)  { top: 6%;  left: 8%;  animation-delay: 0s; }
+    .estrella:nth-child(2)  { top: 15%; left: 88%; animation-delay: 0.5s; font-size: 26px; }
+    .estrella:nth-child(3)  { top: 45%; left: 4%;  animation-delay: 1s; }
+    .estrella:nth-child(4)  { top: 80%; left: 90%; animation-delay: 1.5s; font-size: 24px; }
+    .estrella:nth-child(5)  { top: 90%; left: 20%; animation-delay: 2s; font-size: 16px; }
+    .estrella:nth-child(6)  { top: 30%; left: 60%; animation-delay: 1.2s; font-size: 14px; }
+
+    @keyframes destellar {
+      0%   { opacity: 0.2; transform: scale(1) rotate(0deg); }
+      100% { opacity: 1;   transform: scale(1.2) rotate(180deg); }
+    }
+
+    header {
+      position: relative;
+      z-index: 1;
+      background: rgba(0, 27, 18, 0.6);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(0, 212, 98, 0.12);
+    }
+
+    .header-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 14px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+
+    .logo-icono {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #00d462, #008f40);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      box-shadow: 0 0 20px rgba(0, 212, 98, 0.35);
+      flex-shrink: 0;
+    }
+
+    .logo-nombre {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #F8FAFC;
+      letter-spacing: 0.5px;
+      line-height: 1.1;
+    }
+    .logo-nombre span {
+      color: #00d462;
+    }
+    .logo-sub {
+      font-size: 0.6rem;
+      color: rgba(248, 250, 252, 0.4);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+
+    nav {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .nav-link {
+      padding: 8px 16px;
+      border-radius: 50px;
+      color: rgba(248, 250, 252, 0.6);
+      text-decoration: none;
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      transition: all 0.3s ease;
+      border: 1px solid transparent;
+    }
+    .nav-link:hover {
+      color: #00d462;
+      background: rgba(0, 212, 98, 0.08);
+    }
+    .nav-link.activo {
+      color: #00d462;
+      background: rgba(0, 212, 98, 0.1);
+      border-color: rgba(0, 212, 98, 0.2);
+    }
+
+    .main {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 30px 22px 50px;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(0, 212, 98, 0.12);
+      border-radius: 24px;
+      padding: 30px;
+      box-shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
+      opacity: 0;
+      animation: subir 0.8s ease-out forwards;
+    }
+
+    @keyframes subir {
+      0% { opacity: 0; transform: translateY(30px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    .card-titulo {
+      font-size: 1.7rem;
+      font-weight: 800;
+      color: #F8FAFC;
+      letter-spacing: 1px;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .card-titulo .emoji {
+      color: #00d462;
+    }
+    .card-sub {
+      color: rgba(248, 250, 252, 0.45);
+      font-size: 0.85rem;
+      margin-bottom: 22px;
+    }
+
+    .nueva-nota {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+
+    input[type="text"], input[type="number"] {
+      padding: 13px 16px;
+      background: rgba(0, 212, 98, 0.03);
+      border: 1px solid rgba(0, 212, 98, 0.1);
+      border-radius: 12px;
+      color: #fff;
+      font-size: 0.95rem;
+      font-family: inherit;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+    input[type="text"] {
+      flex: 1;
+      min-width: 160px;
+    }
+    input[type="number"] {
+      width: 100px;
+    }
+    input::placeholder {
+      color: rgba(255, 255, 255, 0.2);
+    }
+    input:focus {
+      border-color: rgba(0, 212, 98, 0.3);
+      box-shadow: 0 0 0 4px rgba(0, 212, 98, 0.04);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 13px 28px;
+      border: 1px solid rgba(0, 212, 98, 0.25);
+      border-radius: 50px;
+      background: linear-gradient(135deg, #00d462, #008f40);
+      color: #001b12;
+      font-family: inherit;
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 25px rgba(0, 212, 98, 0.2);
+    }
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px rgba(0, 212, 98, 0.35);
+    }
+
+    .btn-borde {
+      background: transparent;
+      color: #00d462;
+      box-shadow: none;
+    }
+    .btn-borde:hover {
+      background: rgba(0, 212, 98, 0.1);
+    }
+
+    .btn-pequeno {
+      padding: 8px 16px;
+      font-size: 0.72rem;
+    }
+
+    .btn-danger {
+      background: transparent;
+      color: #ef4444;
+      border-color: rgba(239, 68, 68, 0.35);
+      box-shadow: none;
+    }
+    .btn-danger:hover {
+      background: rgba(239, 68, 68, 0.1);
+      box-shadow: 0 8px 25px rgba(239, 68, 68, 0.15);
+    }
+
+    .vacio {
+      text-align: center;
+      padding: 30px 20px;
+      color: rgba(248, 250, 252, 0.3);
+      font-size: 0.9rem;
+    }
+
+    .materia {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(0, 212, 98, 0.1);
+      border-radius: 14px;
+      padding: 12px 16px;
+      margin-bottom: 10px;
+      animation: subir 0.4s ease-out forwards;
+    }
+    .materia-nombre {
+      flex: 1;
+      font-size: 0.95rem;
+      color: rgba(248, 250, 252, 0.85);
+    }
+    .materia-nota {
+      font-weight: 800;
+      font-size: 1rem;
+      min-width: 44px;
+      text-align: center;
+    }
+    .materia-nota.aprobada { color: #00d462; }
+    .materia-nota.reprobada { color: #ef4444; }
+
+    .resumen {
+      margin-top: 22px;
+      background: rgba(0, 212, 98, 0.04);
+      border: 1px solid rgba(0, 212, 98, 0.15);
+      border-radius: 16px;
+      padding: 18px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 12px;
+      text-align: center;
+    }
+    .resumen-valor {
+      font-size: 1.7rem;
+      font-weight: 900;
+      color: #00d462;
+      line-height: 1.2;
+    }
+    .resumen-etiqueta {
+      font-size: 0.65rem;
+      color: rgba(248, 250, 252, 0.5);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-top: 2px;
+    }
+
+    .estado {
+      margin-top: 16px;
+      text-align: center;
+      padding: 16px;
+      border-radius: 14px;
+      font-size: 1.1rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      border: 1px solid;
+    }
+    .estado.aprobado {
+      color: #00d462;
+      border-color: rgba(0, 212, 98, 0.4);
+      background: rgba(0, 212, 98, 0.08);
+    }
+    .estado.reprobado {
+      color: #ef4444;
+      border-color: rgba(239, 68, 68, 0.4);
+      background: rgba(239, 68, 68, 0.08);
+    }
+
+    footer {
+      position: relative;
+      z-index: 1;
+      border-top: 1px solid rgba(0, 212, 98, 0.12);
+      text-align: center;
+      padding: 22px;
+      color: rgba(248, 250, 252, 0.3);
+      font-size: 0.72rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+    footer strong {
+      color: rgba(0, 212, 98, 0.6);
+    }
+
+    @media (max-width: 640px) {
+      .header-inner {
+        justify-content: center;
+        text-align: center;
+      }
+      .card {
+        padding: 20px 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="estrella">&#9733;</div>
+  <div class="estrella">&#9733;</div>
+  <div class="estrella">&#9733;</div>
+  <div class="estrella">&#9733;</div>
+  <div class="estrella">&#9733;</div>
+  <div class="estrella">&#9733;</div>
+
+  <header>
+    <div class="header-inner">
+      <a class="logo" href="index.html">
+        <span class="logo-icono">&#9917;</span>
+        <span>
+          <div class="logo-nombre">Mi Mundo <span>del Fútbol</span></div>
+          <div class="logo-sub">Estudiante &middot; Futbolero</div>
+        </span>
+      </a>
+      <nav>
+        <a class="nav-link" href="index.html">Inicio</a>
+        <a class="nav-link" href="menu.html">Menú</a>
+        <a class="nav-link activo" href="calculadora.html">Notas</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="main">
+    <div class="card">
+      <h1 class="card-titulo"><span class="emoji">&#128200;</span> Calculadora de notas</h1>
+      <p class="card-sub">Suma tus notas (de 0 a 5) y calcula tu promedio. Se aprueba con 3.0 o más.</p>
+
+      <div class="nueva-nota">
+        <input type="text" id="materia-nombre" placeholder="Materia (ej: Matemáticas)">
+        <input type="number" id="materia-nota" min="0" max="5" step="0.1" placeholder="Nota" value="3.0">
+        <button class="btn" id="btn-agregar">&#10133; Agregar</button>
+      </div>
+
+      <div id="lista-materias"></div>
+
+      <div class="resumen" id="resumen">
+        <div>
+          <div class="resumen-valor" id="res-promedio">0.0</div>
+          <div class="resumen-etiqueta">Promedio</div>
+        </div>
+        <div>
+          <div class="resumen-valor" id="res-alta">0.0</div>
+          <div class="resumen-etiqueta">Nota más alta</div>
+        </div>
+        <div>
+          <div class="resumen-valor" id="res-baja">0.0</div>
+          <div class="resumen-etiqueta">Nota más baja</div>
+        </div>
+        <div>
+          <div class="resumen-valor" id="res-materias">0</div>
+          <div class="resumen-etiqueta">Materias</div>
+        </div>
+      </div>
+
+      <div class="estado" id="estado">&#128200; Agrega tus notas</div>
+
+      <div style="display:flex; justify-content:center; margin-top:18px;">
+        <button class="btn btn-borde btn-pequeno" id="btn-vaciar">&#128465; Vaciar notas</button>
+      </div>
+    </div>
+  </div>
+
+  <footer><strong>#VamosVerde</strong> &middot; Mi Mundo del Fútbol</footer>
+
+  <script>
+    const NOTAS_KEY = 'mimundo_notas';
+
+    function leerNotas() {
+      try { return JSON.parse(localStorage.getItem(NOTAS_KEY)) || []; }
+      catch (e) { return []; }
+    }
+    function guardarNotas(lista) {
+      localStorage.setItem(NOTAS_KEY, JSON.stringify(lista));
+    }
+
+    function formatear(n) {
+      return (Math.round(n * 100) / 100).toFixed(1);
+    }
+
+    function render() {
+      const lista = leerNotas();
+      const cont = document.getElementById('lista-materias');
+
+      if (lista.length === 0) {
+        cont.innerHTML = '<div class="vacio">&#128200; Aún no hay notas. ¡Agrega tu primera materia!</div>';
+        document.getElementById('res-promedio').textContent = '0.0';
+        document.getElementById('res-alta').textContent = '0.0';
+        document.getElementById('res-baja').textContent = '0.0';
+        document.getElementById('res-materias').textContent = '0';
+        const estado = document.getElementById('estado');
+        estado.textContent = '&#128200; Agrega tus notas';
+        estado.className = 'estado';
+        return;
+      }
+
+      cont.innerHTML = '';
+      lista.forEach(function (materia, i) {
+        const div = document.createElement('div');
+        div.className = 'materia';
+        const aprobada = materia.nota >= 3;
+        div.innerHTML =
+          '<span class="materia-nombre"></span>' +
+          '<span class="materia-nota ' + (aprobada ? 'aprobada' : 'reprobada') + '">' + formatear(materia.nota) + '</span>' +
+          '<button class="btn btn-danger btn-pequeno" data-idx="' + i + '">&#128465;</button>';
+        div.querySelector('.materia-nombre').textContent = materia.nombre;
+        cont.appendChild(div);
+      });
+
+      cont.querySelectorAll('.btn-danger').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          const lista2 = leerNotas();
+          lista2.splice(Number(btn.getAttribute('data-idx')), 1);
+          guardarNotas(lista2);
+          render();
+        });
+      });
+
+      let suma = 0;
+      let alta = -Infinity;
+      let baja = Infinity;
+      lista.forEach(function (m) {
+        suma += m.nota;
+        if (m.nota > alta) alta = m.nota;
+        if (m.nota < baja) baja = m.nota;
+      });
+      const promedio = suma / lista.length;
+
+      document.getElementById('res-promedio').textContent = formatear(promedio);
+      document.getElementById('res-alta').textContent = formatear(alta);
+      document.getElementById('res-baja').textContent = formatear(baja);
+      document.getElementById('res-materias').textContent = lista.length;
+
+      const estado = document.getElementById('estado');
+      if (promedio >= 3) {
+        estado.textContent = '&#127942; ¡Aprobado! Sigue así';
+        estado.className = 'estado aprobado';
+      } else {
+        estado.textContent = '&#128680; No aprobado. ¡A subir las notas!';
+        estado.className = 'estado reprobado';
+      }
+    }
+
+    document.getElementById('btn-agregar').addEventListener('click', agregarNota);
+    document.getElementById('materia-nota').addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') agregarNota();
+    });
+
+    function agregarNota() {
+      const nombre = document.getElementById('materia-nombre').value.trim();
+      const nota = parseFloat(document.getElementById('materia-nota').value);
+
+      if (!nombre) {
+        alert('Escribe el nombre de la materia.');
+        return;
+      }
+      if (isNaN(nota) || nota < 0 || nota > 5) {
+        alert('La nota debe estar entre 0 y 5.');
+        return;
+      }
+
+      const lista = leerNotas();
+      lista.push({ nombre: nombre, nota: nota });
+      guardarNotas(lista);
+      document.getElementById('materia-nombre').value = '';
+      document.getElementById('materia-nota').value = '3.0';
+      render();
+    }
+
+    document.getElementById('btn-vaciar').addEventListener('click', function () {
+      const lista = leerNotas();
+      if (lista.length === 0) return;
+      if (confirm('¿Borrar todas las notas?')) {
+        guardarNotas([]);
+        render();
+      }
+    });
+
+    render();
+  </script>
+</body>
+</html>
