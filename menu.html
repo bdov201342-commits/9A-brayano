@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Menú Principal - Mi Mundo del Fútbol</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #001b12 0%, #003f2d 50%, #001a0d 100%);
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 30% 20%, rgba(0, 212, 98, 0.04) 0%, transparent 50%),
+        radial-gradient(ellipse at 70% 80%, rgba(255, 215, 0, 0.03) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .estrella {
+      position: fixed;
+      pointer-events: none;
+      z-index: 0;
+      color: rgba(255, 215, 0, 0.06);
+      font-size: 20px;
+      animation: destellar 3s ease-in-out infinite alternate;
+    }
+    .estrella:nth-child(1)  { top: 6%;  left: 8%;  animation-delay: 0s; }
+    .estrella:nth-child(2)  { top: 15%; left: 88%; animation-delay: 0.5s; font-size: 26px; }
+    .estrella:nth-child(3)  { top: 45%; left: 4%;  animation-delay: 1s; }
+    .estrella:nth-child(4)  { top: 80%; left: 90%; animation-delay: 1.5s; font-size: 24px; }
+    .estrella:nth-child(5)  { top: 90%; left: 20%; animation-delay: 2s; font-size: 16px; }
+    .estrella:nth-child(6)  { top: 30%; left: 60%; animation-delay: 1.2s; font-size: 14px; }
+
+    @keyframes destellar {
+      0%   { opacity: 0.2; transform: scale(1) rotate(0deg); }
+      100% { opacity: 1;   transform: scale(1.2) rotate(180deg); }
+    }
+
+    .main {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 30px 20px;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 460px;
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-radius: 28px;
+      padding: 40px 32px;
+      border: 1px solid rgba(0, 212, 98, 0.08);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+      text-align: center;
+      opacity: 0;
+      animation: subir 0.8s ease-out 0.2s forwards;
+    }
+
+    @keyframes subir {
+      0% { opacity: 0; transform: translateY(30px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    .escudo {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 74px;
+      height: 74px;
+      border-radius: 50%;
+      font-size: 2rem;
+      background: linear-gradient(135deg, #00d462, #008f40);
+      box-shadow: 0 0 30px rgba(0, 212, 98, 0.25);
+      margin-bottom: 16px;
+    }
+
+    .titulo {
+      font-size: 1.9rem;
+      font-weight: 800;
+      color: #F8FAFC;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+    .titulo span {
+      color: #00d462;
+    }
+
+    .bienvenida {
+      color: rgba(255, 255, 255, 0.85);
+      font-size: 1.1rem;
+      margin: 10px 0 4px;
+    }
+    .bienvenida strong {
+      color: #00d462;
+      font-weight: 800;
+    }
+
+    .subtitulo {
+      color: rgba(255, 255, 255, 0.25);
+      font-size: 0.78rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 26px;
+    }
+
+    .menu {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px 24px;
+      background: linear-gradient(135deg, rgba(0, 212, 98, 0.12), rgba(0, 212, 98, 0.04));
+      border: 1px solid rgba(0, 212, 98, 0.15);
+      border-radius: 50px;
+      color: #F8FAFC;
+      font-family: inherit;
+      font-size: 0.92rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+    .btn:hover {
+      background: linear-gradient(135deg, rgba(0, 212, 98, 0.2), rgba(0, 212, 98, 0.08));
+      border-color: rgba(0, 212, 98, 0.3);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 212, 98, 0.1);
+    }
+
+    .btn-principal {
+      background: linear-gradient(135deg, #00d462, #008f40);
+      color: #001b12;
+      box-shadow: 0 8px 25px rgba(0, 212, 98, 0.25);
+    }
+    .btn-principal:hover {
+      background: linear-gradient(135deg, #00d462, #008f40);
+      border-color: #00d462;
+      box-shadow: 0 12px 30px rgba(0, 212, 98, 0.35);
+    }
+
+    .btn-dorado {
+      border-color: rgba(255, 215, 0, 0.25);
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.08), rgba(255, 215, 0, 0.02));
+    }
+    .btn-dorado:hover {
+      background: rgba(255, 215, 0, 0.1);
+      border-color: rgba(255, 215, 0, 0.4);
+      box-shadow: 0 8px 25px rgba(255, 215, 0, 0.1);
+    }
+    .btn-dorado .emoji {
+      color: #ffd700;
+    }
+
+    .footer {
+      margin-top: 24px;
+      color: rgba(255, 255, 255, 0.12);
+      font-size: 0.72rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+    .footer strong {
+      color: rgba(0, 212, 98, 0.4);
+    }
+  </style>
+</head>
+<body>
+  <div class="estrella">&#9733;</div>
+  <div class="estrella">&#9733;</div>
+  <div class="estrella">&#9733;</div>
+  <div class="estrella">&#9733;</div>
+  <div class="estrella">&#9733;</div>
+  <div class="estrella">&#9733;</div>
+
+  <div class="main">
+    <div class="card">
+      <div class="escudo">&#9917;</div>
+      <h1 class="titulo">Mi Mundo <span>del Fútbol</span></h1>
+      <p class="bienvenida">¡Hola, <strong id="nombre">Hincha</strong>!</p>
+      <p class="subtitulo">Elige una sección</p>
+
+      <div class="menu">
+        <a class="btn btn-principal" href="juego.html">&#9917; Juego de penales</a>
+        <a class="btn" href="partido.html">&#9917; Partido de fútbol</a>
+        <a class="btn" href="diario.html">&#128214; Diario personal</a>
+        <a class="btn" href="tareas.html">&#9989; Lista de tareas</a>
+        <a class="btn" href="calculadora.html">&#128200; Calculadora de notas</a>
+        <a class="btn btn-dorado" href="index.html">&#127968; Volver al inicio</a>
+      </div>
+
+      <p class="footer"><strong>#VamosVerde</strong> &middot; Orgullo verdolaga</p>
+    </div>
+  </div>
+
+  <script>
+    const usuario = localStorage.getItem('usuario');
+    document.getElementById('nombre').textContent = usuario ? usuario : 'Hincha';
+  </script>
+</body>
+</html>
+  
