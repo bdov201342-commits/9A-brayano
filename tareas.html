@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lista de tareas - Mi Mundo del Fútbol</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #001b12 0%, #003f2d 50%, #001a0d 100%);
+      position: relative;
+      overflow-x: hidden;
+      color: #F8FAFC;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 30% 20%, rgba(0, 212, 98, 0.04) 0%, transparent 50%),
+        radial-gradient(ellipse at 70% 80%, rgba(255, 215, 0, 0.03) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .estrella {
+      position: fixed;
+      pointer-events: none;
+      z-index: 0;
+      color: rgba(255, 215, 0, 0.06);
+      font-size: 20px;
+      animation: destellar 3s ease-in-out infinite alternate;
+    }
+    .estrella:nth-child(1)  { top: 6%;  left: 8%;  animation-delay: 0s; }
+    .estrella:nth-child(2)  { top: 15%; left: 88%; animation-delay: 0.5s; font-size: 26px; }
+    .estrella:nth-child(3)  { top: 45%; left: 4%;  animation-delay: 1s; }
+    .estrella:nth-child(4)  { top: 80%; left: 90%; animation-delay: 1.5s; font-size: 24px; }
+    .estrella:nth-child(5)  { top: 90%; left: 20%; animation-delay: 2s; font-size: 16px; }
+    .estrella:nth-child(6)  { top: 30%; left: 60%; animation-delay: 1.2s; font-size: 14px; }
+
+    @keyframes destellar {
+      0%   { opacity: 0.2; transform: scale(1) rotate(0deg); }
+      100% { opacity: 1;   transform: scale(1.2) rotate(180deg); }
+    }
+
+    header {
+      position: relative;
+      z-index: 1;
+      background: rgba(0, 27, 18, 0.6);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(0, 212, 98, 0.12);
+    }
+
+    .header-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 14px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+
+    .logo-icono {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #00d462, #008f40);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      box-shadow: 0 0 20px rgba(0, 212, 98, 0.35);
+      flex-shrink: 0;
+    }
+
+    .logo-nombre {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #F8FAFC;
+      letter-spacing: 0.5px;
+      line-height: 1.1;
+    }
+    .logo-nombre span {
+      color: #00d462;
+    }
+    .logo-sub {
+      font-size: 0.6rem;
+      color: rgba(248, 250, 252, 0.4);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+
+    nav {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .nav-link {
+      padding: 8px 16px;
+      border-radius: 50px;
+      color: rgba(248, 250, 252, 0.6);
+      text-decoration: none;
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      transition: all 0.3s ease;
+      border: 1px solid transparent;
+    }
+    .nav-link:hover {
+      color: #00d462;
+      background: rgba(0, 212, 98, 0.08);
+    }
+    .nav-link.activo {
+      color: #00d462;
+      background: rgba(0, 212, 98, 0.1);
+      border-color: rgba(0, 212, 98, 0.2);
+    }
+
+    .main {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 30px 22px 50px;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(0, 212, 98, 0.12);
+      border-radius: 24px;
+      padding: 30px;
+      box-shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
+      opacity: 0;
+      animation: subir 0.8s ease-out forwards;
+    }
+
+    @keyframes subir {
+      0% { opacity: 0; transform: translateY(30px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    .card-titulo {
+      font-size: 1.7rem;
+      font-weight: 800;
+      color: #F8FAFC;
+      letter-spacing: 1px;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .card-titulo .emoji {
+      color: #00d462;
+    }
+    .card-sub {
+      color: rgba(248, 250, 252, 0.45);
+      font-size: 0.85rem;
+      margin-bottom: 22px;
+    }
+
+    .nueva-tarea {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+
+    input[type="text"] {
+      flex: 1;
+      min-width: 200px;
+      padding: 13px 16px;
+      background: rgba(0, 212, 98, 0.03);
+      border: 1px solid rgba(0, 212, 98, 0.1);
+      border-radius: 12px;
+      color: #fff;
+      font-size: 0.95rem;
+      font-family: inherit;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+    input[type="text"]::placeholder {
+      color: rgba(255, 255, 255, 0.2);
+    }
+    input[type="text"]:focus {
+      border-color: rgba(0, 212, 98, 0.3);
+      box-shadow: 0 0 0 4px rgba(0, 212, 98, 0.04);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 13px 28px;
+      border: 1px solid rgba(0, 212, 98, 0.25);
+      border-radius: 50px;
+      background: linear-gradient(135deg, #00d462, #008f40);
+      color: #001b12;
+      font-family: inherit;
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 25px rgba(0, 212, 98, 0.2);
+    }
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px rgba(0, 212, 98, 0.35);
+    }
+
+    .btn-borde {
+      background: transparent;
+      color: #00d462;
+      box-shadow: none;
+    }
+    .btn-borde:hover {
+      background: rgba(0, 212, 98, 0.1);
+    }
+
+    .btn-pequeno {
+      padding: 8px 16px;
+      font-size: 0.72rem;
+    }
+
+    .btn-danger {
+      background: transparent;
+      color: #ef4444;
+      border-color: rgba(239, 68, 68, 0.35);
+      box-shadow: none;
+    }
+    .btn-danger:hover {
+      background: rgba(239, 68, 68, 0.1);
+      box-shadow: 0 8px 25px rgba(239, 68, 68, 0.15);
+    }
+
+    .filtros {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .chip {
+      padding: 8px 18px;
+      border-radius: 50px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(0, 212, 98, 0.15);
+      color: rgba(248, 250, 252, 0.6);
+      font-family: inherit;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .chip:hover {
+      color: #00d462;
+    }
+    .chip.activo {
+      background: rgba(0, 212, 98, 0.12);
+      border-color: rgba(0, 212, 98, 0.35);
+      color: #00d462;
+    }
+
+    .contador {
+      text-align: right;
+      color: rgba(0, 212, 98, 0.5);
+      font-size: 0.75rem;
+      margin-bottom: 14px;
+      letter-spacing: 1px;
+    }
+
+    .vacio {
+      text-align: center;
+      padding: 30px 20px;
+      color: rgba(248, 250, 252, 0.3);
+      font-size: 0.9rem;
+    }
+
+    .tarea {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(0, 212, 98, 0.1);
+      border-radius: 14px;
+      padding: 13px 16px;
+      margin-bottom: 10px;
+      animation: subir 0.4s ease-out forwards;
+      transition: all 0.3s ease;
+    }
+    .tarea.completada {
+      opacity: 0.55;
+    }
+    .tarea.completada .tarea-texto {
+      text-decoration: line-through;
+      color: rgba(248, 250, 252, 0.4);
+    }
+
+    .check {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 2px solid rgba(0, 212, 98, 0.4);
+      background: transparent;
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      color: #001b12;
+    }
+    .check.hecho {
+      background: #00d462;
+      border-color: #00d462;
+    }
+
+    .tarea-texto {
+      flex: 1;
+      font-size: 0.95rem;
+      color: rgba(248, 250, 252, 0.85);
+      word-break: break-word;
+    }
+
+    footer {
+      position: relative;
+      z-index: 1;
+      border-top: 1px solid rgba(0, 212, 98, 0.12);
+      text-align: center;
+      padding: 22px;
+      color: rgba(248, 250, 252, 0.3);
+      font-size: 0.72rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+    footer strong {
+      color: rgba(0, 212, 98, 0.6);
+    }
+
+    @media (max-width: 640px) {
+      .header-inner {
+        justify-content: center;
+        text-align: center;
+      }
+      .card {
+        padding: 20px 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="estrella">&#9733;</div>
+  <div class="estrella">&#9733;</div>
+  <div class="estrella">&#9733;</div>
+  <div class="estrella">&#9733;</div>
+  <div class="estrella">&#9733;</div>
+  <div class="estrella">&#9733;</div>
+
+  <header>
+    <div class="header-inner">
+      <a class="logo" href="index.html">
+        <span class="logo-icono">&#9917;</span>
+        <span>
+          <div class="logo-nombre">Mi Mundo <span>del Fútbol</span></div>
+          <div class="logo-sub">Estudiante &middot; Futbolero</div>
+        </span>
+      </a>
+      <nav>
+        <a class="nav-link" href="index.html">Inicio</a>
+        <a class="nav-link" href="menu.html">Menú</a>
+        <a class="nav-link activo" href="tareas.html">Tareas</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="main">
+    <div class="card">
+      <h1 class="card-titulo"><span class="emoji">&#9989;</span> Lista de tareas</h1>
+      <p class="card-sub">Organiza tus deberes y compromisos del día a día.</p>
+
+      <div class="nueva-tarea">
+        <input type="text" id="nueva-tarea" placeholder="Escribe una nueva tarea…">
+        <button class="btn" id="btn-agregar">&#10133; Agregar</button>
+      </div>
+
+      <div class="filtros">
+        <button class="chip activo" data-filtro="todas">Todas</button>
+        <button class="chip" data-filtro="pendientes">Pendientes</button>
+        <button class="chip" data-filtro="completadas">Completadas</button>
+        <button class="chip" data-filtro="limpiar">&#128465; Limpiar</button>
+      </div>
+
+      <div class="contador" id="contador">0 tareas</div>
+      <div id="lista-tareas"></div>
+    </div>
+  </div>
+
+  <footer><strong>#VamosVerde</strong> &middot; Mi Mundo del Fútbol</footer>
+
+  <script>
+    const TAREAS_KEY = 'mimundo_tareas';
+    let filtro = 'todas';
+
+    function leerTareas() {
+      try { return JSON.parse(localStorage.getItem(TAREAS_KEY)) || []; }
+      catch (e) { return []; }
+    }
+    function guardarTareas(lista) {
+      localStorage.setItem(TAREAS_KEY, JSON.stringify(lista));
+    }
+
+    function render() {
+      const lista = leerTareas();
+      const filtradas = lista.filter(function (t) {
+        if (filtro === 'pendientes') return !t.hecha;
+        if (filtro === 'completadas') return t.hecha;
+        return true;
+      });
+
+      const pendientes = lista.filter(function (t) { return !t.hecha; }).length;
+      document.getElementById('contador').textContent =
+        lista.length + ' tareas' + (pendientes ? ' &middot; ' + pendientes + ' pendientes' : '');
+
+      const cont = document.getElementById('lista-tareas');
+      if (filtradas.length === 0) {
+        cont.innerHTML = '<div class="vacio">&#9989; No hay tareas aquí. ¡Añade una arriba!</div>';
+        return;
+      }
+
+      cont.innerHTML = '';
+      filtradas.forEach(function (tarea, i) {
+        const div = document.createElement('div');
+        div.className = 'tarea' + (tarea.hecha ? ' completada' : '');
+        div.innerHTML =
+          '<span class="check' + (tarea.hecha ? ' hecho' : '') + '">' + (tarea.hecha ? '&#10003;' : '') + '</span>' +
+          '<span class="tarea-texto"></span>' +
+          '<button class="btn btn-danger btn-pequeno" data-idx="' + i + '">&#128465;</button>';
+        div.querySelector('.tarea-texto').textContent = tarea.texto;
+        cont.appendChild(div);
+      });
+
+      cont.querySelectorAll('.check').forEach(function (check, n) {
+        check.addEventListener('click', function () {
+          const real = buscarIndiceReal(filtradas[n]);
+          const lista2 = leerTareas();
+          lista2[real].hecha = !lista2[real].hecha;
+          guardarTareas(lista2);
+          render();
+        });
+      });
+
+      cont.querySelectorAll('.btn-danger').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          const n = Number(btn.getAttribute('data-idx'));
+          const real = buscarIndiceReal(filtradas[n]);
+          const lista2 = leerTareas();
+          lista2.splice(real, 1);
+          guardarTareas(lista2);
+          render();
+        });
+      });
+    }
+
+    function buscarIndiceReal(tarea) {
+      return leerTareas().indexOf(tarea);
+    }
+
+    document.getElementById('btn-agregar').addEventListener('click', agregarTarea);
+    document.getElementById('nueva-tarea').addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') agregarTarea();
+    });
+
+    function agregarTarea() {
+      const input = document.getElementById('nueva-tarea');
+      const texto = input.value.trim();
+      if (!texto) return;
+      const lista = leerTareas();
+      lista.push({ texto: texto, hecha: false });
+      guardarTareas(lista);
+      input.value = '';
+      render();
+    }
+
+    document.querySelectorAll('.chip').forEach(function (chip) {
+      chip.addEventListener('click', function () {
+        const tipo = chip.getAttribute('data-filtro');
+        if (tipo === 'limpiar') {
+          const lista = leerTareas();
+          if (lista.length === 0) return;
+          if (confirm('¿Eliminar todas las tareas?')) {
+            guardarTareas([]);
+            render();
+          }
+          return;
+        }
+        filtro = tipo;
+        document.querySelectorAll('.chip').forEach(function (c) { c.classList.remove('activo'); });
+        chip.classList.add('activo');
+        render();
+      });
+    });
+
+    render();
+  </script>
+</body>
+</html>
