@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Partido de fútbol - Mi Mundo del Fútbol</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #001b12 0%, #003f2d 50%, #001a0d 100%);
+      color: #F8FAFC;
+      position: relative;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 30% 20%, rgba(0, 212, 98, 0.05) 0%, transparent 50%),
+        radial-gradient(ellipse at 70% 80%, rgba(255, 215, 0, 0.03) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .estrella {
+      position: fixed;
+      pointer-events: none;
+      z-index: 0;
+      color: rgba(255, 215, 0, 0.06);
+      font-size: 20px;
+      animation: destellar 3s ease-in-out infinite alternate;
+    }
+    .estrella:nth-child(1)  { top: 6%;  left: 8%;  animation-delay: 0s; }
+    .estrella:nth-child(2)  { top: 15%; left: 88%; animation-delay: 0.5s; font-size: 26px; }
+    .estrella:nth-child(3)  { top: 45%; left: 4%;  animation-delay: 1s; }
+    .estrella:nth-child(4)  { top: 80%; left: 90%; animation-delay: 1.5s; font-size: 24px; }
+    .estrella:nth-child(5)  { top: 90%; left: 20%; animation-delay: 2s; font-size: 16px; }
+    .estrella:nth-child(6)  { top: 30%; left: 60%; animation-delay: 1.2s; font-size: 14px; }
+
+    @keyframes destellar {
+      0%   { opacity: 0.2; transform: scale(1) rotate(0deg); }
+      100% { opacity: 1;   transform: scale(1.2) rotate(180deg); }
+    }
+
+    header {
+      position: relative;
+      z-index: 50;
+      background: rgba(0, 27, 18, 0.6);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(0, 212, 98, 0.12);
+    }
+
+    .header-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 14px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+
+    .logo-icono {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #00d462, #008f40);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      box-shadow: 0 0 20px rgba(0, 212, 98, 0.35);
+      animation: pulso 3s ease-in-out infinite;
+      flex-shrink: 0;
+    }
+
+    @keyframes pulso {
+      0%, 100% { transform: scale(1); }
+      50%      { transform: scale(1.06); }
+    }
+
+    .logo-nombre {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #F8FAFC;
+      letter-spacing: 0.5px;
+      line-height: 1.1;
+    }
+    .logo-nombre span {
+      color: #00d462;
+    }
+    .logo-sub {
+      font-size: 0.6rem;
+      color: rgba(248, 250, 252, 0.4);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+
+    nav {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .nav-link {
+      padding: 8px 16px;
+      border-radius: 50px;
+      color: rgba(248, 250, 252, 0.6);
+      text-decoration: none;
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      transition: all 0.3s ease;
+      border: 1px solid transparent;
+    }
+    .nav-link:hover {
+      color: #00d462;
+      background: rgba(0, 212, 98, 0.08);
+    }
+    .nav-link.activo {
+      color: #00d462;
+      background: rgba(0, 212, 98, 0.1);
+      border-color: rgba(0, 212, 98, 0.2);
+    }
+
+    .main {
+      position: relative;
+      z-index: 1;
+      flex: 1;
+      width: 100%;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 26px 22px 40px;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(0, 212, 98, 0.12);
+      border-radius: 24px;
+      padding: 28px;
+      box-shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
+      opacity: 0;
+      animation: subir 0.8s ease-out forwards;
+    }
+
+    @keyframes subir {
+      0% { opacity: 0; transform: translateY(30px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    .pantalla {
+      display: none;
+    }
+    .pantalla.activo {
+      display: block;
+    }
+
+    /* ===== INICIO ===== */
+    .inicio-contenido {
+      text-align: center;
+    }
+    .inicio-icono {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 78px;
+      height: 78px;
+      border-radius: 50%;
+      font-size: 2.4rem;
+      background: linear-gradient(135deg, #00d462, #008f40);
+      box-shadow: 0 0 40px rgba(0, 212, 98, 0.4);
+      margin-bottom: 18px;
+      animation: pulso 3s ease-in-out infinite;
+    }
+    .inicio-titulo {
+      font-size: clamp(1.7rem, 5vw, 2.4rem);
+      font-weight: 900;
+      letter-spacing: 0.5px;
+    }
+    .inicio-titulo span {
+      background: linear-gradient(90deg, #00d462, #4ADE80);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .inicio-sub {
+      color: rgba(248, 250, 252, 0.55);
+      font-weight: 300;
+      margin-top: 10px;
+      max-width: 620px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.6;
+      font-size: 0.95rem;
+    }
+    .reglas {
+      margin-top: 22px;
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .regla {
+      flex: 1;
+      min-width: 160px;
+      max-width: 260px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(0, 212, 98, 0.15);
+      border-radius: 16px;
+      padding: 16px;
+    }
+    .regla-icono {
+      font-size: 1.6rem;
+      display: block;
+      margin-bottom: 8px;
+    }
+    .regla-titulo {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: #00d462;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .regla-texto {
+      font-size: 0.82rem;
+      color: rgba(248, 250, 252, 0.65);
+      line-height: 1.5;
+    }
+    .tecla {
+      display: inline-block;
+      background: rgba(0, 212, 98, 0.15);
+      border: 1px solid rgba(0, 212, 98, 0.3);
+      border-radius: 6px;
+      padding: 1px 8px;
+      font-size: 0.75rem;
+      color: #4ADE80;
+      font-weight: 700;
+      margin: 0 2px;
+    }
+    .botones {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 26px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px 28px;
+      border: 1px solid rgba(0, 212, 98, 0.25);
+      border-radius: 50px;
+      background: linear-gradient(135deg, #00d462, #008f40);
+      color: #001b12;
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.35s ease;
+      box-shadow: 0 8px 25px rgba(0, 212, 98, 0.2);
+      position: relative;
+      overflow: hidden;
+    }
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+      transition: left 0.5s ease;
+    }
+    .btn:hover::before {
+      left: 100%;
+    }
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 35px rgba(0, 212, 98, 0.35);
+      filter: brightness(1.1);
+    }
+
+    .btn-borde {
+      background: transparent;
+      color: #00d462;
+      box-shadow: none;
+    }
+    .btn-borde:hover {
+      background: rgba(0, 212, 98, 0.1);
+      filter: none;
+    }
+
+    /* ===== JUEGO ===== */
+    .marcador {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(0, 212, 98, 0.12);
+      border-radius: 20px;
+      padding: 14px 18px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+      text-align: center;
+    }
+    .marcador-equipo {
+      flex: 1;
+      min-width: 130px;
+    }
+    .marcador-nombre {
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+    .marcador-local .marcador-nombre { color: #4ADE80; }
+    .marcador-visita .marcador-nombre { color: rgba(248, 250, 252, 0.7); }
+    .marcador-puntos {
+      font-size: clamp(1.5rem, 5vw, 2rem);
+      font-weight: 900;
+      color: #F8FAFC;
+      line-height: 1;
+      margin-top: 2px;
+    }
+    .marcador-tiempo {
+      flex: 1;
+      min-width: 120px;
+      padding: 8px 16px;
+      border-radius: 50px;
+      background: rgba(0, 212, 98, 0.1);
+      border: 1px solid rgba(0, 212, 98, 0.2);
+      color: #00d462;
+      font-size: 0.8rem;
+      font-weight: 800;
+      letter-spacing: 2px;
+    }
+
+    .canvas-wrap {
+      position: relative;
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid rgba(0, 212, 98, 0.15);
+      box-shadow: 0 18px 50px rgba(0, 0, 0, 0.4);
+      background: #14532D;
+    }
+    canvas {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .aviso {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 27, 18, 0.55);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      z-index: 5;
+    }
+    .aviso.mostrar {
+      opacity: 1;
+    }
+    .aviso-texto {
+      font-size: clamp(2rem, 8vw, 3.4rem);
+      font-weight: 900;
+      letter-spacing: 2px;
+      transform: scale(0.6);
+      transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+      text-shadow: 0 6px 30px rgba(0, 0, 0, 0.6);
+    }
+    .aviso.mostrar .aviso-texto {
+      transform: scale(1);
+    }
+    .aviso-texto.gol {
+      background: linear-gradient(90deg, #00d462, #4ADE80);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .aviso-texto.rival {
+      color: #EF4444;
+    }
+
+    .pista-juego {
+      margin-top: 14px;
+      text-align: center;
+      color: rgba(248, 250, 252, 0.45);
+      font-size: 0.8rem;
+      letter-spacing: 0.5px;
+    }
+
+    .controles-tactiles {
+      display: none;
+      margin-top: 16px;
+      justify-content: center;
+      align-items: center;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+    @media (pointer: coarse) {
+      .controles-tactiles {
+        display: flex;
+      }
+    }
+    .dpad {
+      display: grid;
+      grid-template-columns: repeat(3, 56px);
+      grid-template-rows: repeat(3, 56px);
+      gap: 8px;
+    }
+    .dpad-btn {
+      background: rgba(0, 212, 98, 0.1);
+      border: 1px solid rgba(0, 212, 98, 0.25);
+      border-radius: 14px;
+      color: #00d462;
+      font-size: 1.3rem;
+      font-weight: 800;
+      cursor: pointer;
+      font-family: inherit;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: none;
+      transition: all 0.15s ease;
+    }
+    .dpad-btn:active {
+      background: rgba(0, 212, 98, 0.35);
+      transform: scale(0.94);
+    }
+    .dpad-arriba    { grid-column: 2; grid-row: 1; }
+    .dpad-izquierda { grid-column: 1; grid-row: 2; }
+    .dpad-centro    { grid-column: 2; grid-row: 2; visibility: hidden; }
+    .dpad-derecha   { grid-column: 3; grid-row: 2; }
+    .dpad-abajo     { grid-column: 2; grid-row: 3; }
+    .btn-patada {
+      width: 88px;
+      height: 88px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #00d462, #008f40);
+      border: 1px solid rgba(0, 212, 98, 0.4);
+      color: #001b12;
+      font-family: inherit;
+      font-size: 0.85rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      cursor: pointer;
+      box-shadow: 0 10px 30px rgba(0, 212, 98, 0.35);
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: none;
+      transition: all 0.15s ease;
+    }
+    .btn-patada:active {
+      transform: scale(0.92);
+      box-shadow: 0 4px 15px rgba(0, 212, 98, 0.3);
+    }
+
+    /* ===== FIN ===== */
+    .fin-contenido {
+      text-align: center;
+    }
+    .fin-emoji {
+      font-size: 3.4rem;
+      display: block;
+      margin-bottom: 14px;
+      animation: pulso 2.5s ease-in-out infinite;
+    }
+    .fin-titulo {
+      font-size: clamp(1.8rem, 5vw, 2.6rem);
+      font-weight: 900;
+      letter-spacing: 0.5px;
+    }
+    .fin-titulo.campeon {
+      background: linear-gradient(90deg, #00d462, #4ADE80);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .fin-titulo.derrota {
+      color: #EF4444;
+    }
+    .fin-titulo.empate {
+      color: #FACC15;
+    }
+    .fin-sub {
+      color: rgba(248, 250, 252, 0.55);
+      font-weight: 300;
+      margin-top: 8px;
+      font-size: 0.95rem;
+    }
+    .fin-marcador {
+      margin: 24px auto 0;
+      max-width: 420px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
+      padding: 18px;
+      background: rgba(0, 212, 98, 0.06);
+      border: 1px solid rgba(0, 212, 98, 0.15);
+      border-radius: 18px;
+    }
+    .fin-marcador .nombre {
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .fin-marcador .pts {
+      font-size: 2rem;
+      font-weight: 900;
+      color: #4ADE80;
+    }
+    .fin-marcador .guion {
+      color: rgba(248, 250, 252, 0.4);
+      font-size: 1.8rem;
+      font-weight: 700;
+    }
+
+    footer {
+      position: relative;
+      z-index: 1;
+      border-top: 1px solid rgba(0, 212, 98, 0.12);
+      text-align: center;
+      padding: 22px;
+      color: rgba(248, 250, 252, 0.3);
+      font-size: 0.72rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+    footer strong {
+      color: rgba(0, 212, 98, 0.6);
+    }
+
+    @media (max-width: 640px) {
+      .header-inner {
+        justify-content: center;
+        text-align: center;
+      }
+      .card {
+        padding: 20px 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="estrella">&#9733;</div>
+  <div class="estrella">&#9733;</div>
+  <div class="estrella">&#9733;</div>
+  <div class="estrella">&#9733;</div>
+  <div class="estrella">&#9733;</div>
+  <div class="estrella">&#9733;</div>
+
+  <header>
+    <div class="header-inner">
+      <a class="logo" href="index.html">
+        <span class="logo-icono">&#9917;</span>
+        <span>
+          <div class="logo-nombre">Mi Mundo <span>del Fútbol</span></div>
+          <div class="logo-sub">Estudiante &middot; Futbolero</div>
+        </span>
+      </a>
+      <nav>
+        <a class="nav-link" href="index.html">Inicio</a>
+        <a class="nav-link" href="menu.html">Menú</a>
+        <a class="nav-link activo" href="partido.html">Partido</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="main">
+
+    <section id="pantalla-inicio" class="pantalla activo">
+      <div class="card">
+        <div class="inicio-contenido">
+          <div class="inicio-icono">&#9917;</div>
+          <h1 class="inicio-titulo">Partido <span>de Fútbol</span></h1>
+          <p class="inicio-sub">
+            Dos bolas rivales se enfrentan en la cancha. Mueve tu bola con las flechas,
+            empuja el balón y dispara con <span class="tecla">X</span> para meter goles en el arco rival.
+            Tienes 90 segundos para ganar el partido.
+          </p>
+
+          <div class="reglas">
+            <div class="regla">
+              <span class="regla-icono">&#11014;&#11015;&#11013;&#10145;</span>
+              <div class="regla-titulo">Mover</div>
+              <div class="regla-texto">Usa las flechas del teclado para mover tu bola por la cancha.</div>
+            </div>
+            <div class="regla">
+              <span class="regla-icono">&#9917;</span>
+              <div class="regla-titulo">Disparar</div>
+              <div class="regla-texto">Presiona <span class="tecla">X</span> cerca del balón para disparar hacia donde miras.</div>
+            </div>
+            <div class="regla">
+              <span class="regla-icono">&#127942;</span>
+              <div class="regla-titulo">Ganar</div>
+              <div class="regla-texto">Mete más goles que tu rival antes de que se acabe el tiempo.</div>
+            </div>
+          </div>
+
+          <div class="botones">
+            <button class="btn" id="btn-comenzar">&#9917; Comenzar partido</button>
+            <a class="btn btn-borde" href="menu.html">&#128281; Volver al menú</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="pantalla-juego" class="pantalla">
+      <div class="marcador">
+        <div class="marcador-equipo marcador-local">
+          <div class="marcador-nombre" id="nombre-local">Mi bola</div>
+          <div class="marcador-puntos" id="puntos-local">0</div>
+        </div>
+        <div class="marcador-tiempo" id="tiempo-txt">01:30</div>
+        <div class="marcador-equipo marcador-visita">
+          <div class="marcador-nombre" id="nombre-visita">Bola rival</div>
+          <div class="marcador-puntos" id="puntos-visita">0</div>
+        </div>
+      </div>
+
+      <div class="canvas-wrap">
+        <canvas id="lienzo" width="900" height="480"></canvas>
+        <div class="aviso" id="aviso">
+          <div class="aviso-texto" id="aviso-texto">¡GOOOL!</div>
+        </div>
+      </div>
+
+      <p class="pista-juego">Mueve tu bola con las flechas y presiona <b>X</b> para disparar.</p>
+
+      <div class="controles-tactiles">
+        <div class="dpad">
+          <button class="dpad-btn dpad-arriba" data-tecla="ArrowUp">&#8593;</button>
+          <button class="dpad-btn dpad-izquierda" data-tecla="ArrowLeft">&#8592;</button>
+          <button class="dpad-btn dpad-centro"></button>
+          <button class="dpad-btn dpad-derecha" data-tecla="ArrowRight">&#8594;</button>
+          <button class="dpad-btn dpad-abajo" data-tecla="ArrowDown">&#8595;</button>
+        </div>
+        <button class="btn-patada" id="btn-patada">&#9917; Patear</button>
+      </div>
+
+      <div class="botones">
+        <a class="btn btn-borde" href="menu.html">&#128281; Volver al menú</a>
+      </div>
+    </section>
+
+    <section id="pantalla-fin" class="pantalla">
+      <div class="card">
+        <div class="fin-contenido">
+          <span class="fin-emoji" id="fin-emoji">&#127942;</span>
+          <h1 class="fin-titulo" id="fin-titulo">¡Victoria!</h1>
+          <p class="fin-sub" id="fin-sub">Ganaste el partido. ¡Qué jugada!</p>
+
+          <div class="fin-marcador">
+            <div>
+              <div class="nombre" id="fin-nombre-local">Mi bola</div>
+              <div class="pts" id="fin-pts-local">0</div>
+            </div>
+            <span class="guion">-</span>
+            <div>
+              <div class="nombre" id="fin-nombre-visita">Bola rival</div>
+              <div class="pts" id="fin-pts-visita">0</div>
+            </div>
+          </div>
+
+          <div class="botones">
+            <button class="btn" id="btn-jugar-otra">&#128260; Jugar otra vez</button>
+            <a class="btn btn-borde" href="menu.html">&#128281; Volver al menú</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <footer><strong>#VamosVerde</strong> &middot; Mi Mundo del Fútbol</footer>
+
+  <script>
+    function $(id) { return document.getElementById(id); }
+    function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
+    function lerp(a, b, t) { return a + (b - a) * t; }
+    function hip(x, y) { return Math.hypot(x, y); }
+
+    const W = 900, H = 480;
+    const PX1 = 20, PX2 = 880;
+    const TOP = 150, BOT = 330;
+    const POSTS = [
+      { x: PX1, y: TOP }, { x: PX1, y: BOT },
+      { x: PX2, y: TOP }, { x: PX2, y: BOT }
+    ];
+    const RADIO = 16;
+    const RADIO_BALON = 14;
+    const VEL_JUGADOR = 300;
+    const VEL_RIVAL = 260;
+    const FUERZA_PATEO = 760;
+    const TIEMPO_PARTIDO = 90;
+
+    const canvas = $('lienzo');
+    const ctx = canvas.getContext('2d');
+
+    const colores = {
+      jugador: { primario: '#00d462', secundario: '#008f40' },
+      rival: { primario: '#ef4444', secundario: '#b91c1c' }
+    };
+
+    let estado = 'inicio';
+    let marcador = { jug: 0, riv: 0 };
+    let tiempo = TIEMPO_PARTIDO;
+    let jugador = { x: 250, y: 240, vx: 0, vy: 0, r: RADIO, mirandoX: 1, mirandoY: 0 };
+    let rival = { x: 650, y: 240, vx: 0, vy: 0, r: RADIO };
+    let balon = { x: 450, y: 240, vx: 0, vy: 0, r: RADIO_BALON };
+    const teclas = {};
+    let cooldownJugador = 0;
+    let cooldownRival = 0;
+    let cooldownGol = 0;
+    let ultimoFrame = 0;
+    let statsGuardadas = false;
+
+    const STATS_KEY = 'mimundo_stats';
+    function leerStats() {
+      try { return JSON.parse(localStorage.getItem(STATS_KEY)) || {}; }
+      catch (e) { return {}; }
+    }
+    function guardarStats(s) { localStorage.setItem(STATS_KEY, JSON.stringify(s)); }
+    function sumarStats(parcial) {
+      const s = leerStats();
+      s.nombre = s.nombre || (localStorage.getItem('usuario') || 'Jugador');
+      s.partidos = (s.partidos || 0) + (parcial.partidos || 0);
+      s.goles = (s.goles || 0) + (parcial.goles || 0);
+      s.asistencias = (s.asistencias || 0) + (parcial.asistencias || 0);
+      s.penalesConvertidos = (s.penalesConvertidos || 0) + (parcial.convertidos || 0);
+      s.penalesTotales = (s.penalesTotales || 0) + (parcial.totales || 0);
+      s.puntaje = (s.puntaje || 0) + (parcial.puntaje || 0);
+      s.nivel = Math.max(s.nivel || 0, parcial.nivel || 0);
+      guardarStats(s);
+    }
+
+    let audioCtx = null;
+    function beep(freq, dur, tipo, delay) {
+      try {
+        audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+        const t0 = audioCtx.currentTime + (delay || 0);
+        const o = audioCtx.createOscillator();
+        const g = audioCtx.createGain();
+        o.type = tipo || 'square';
+        o.frequency.setValueAtTime(freq, t0);
+        g.gain.setValueAtTime(0.1, t0);
+        g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+        o.connect(g);
+        g.connect(audioCtx.destination);
+        o.start(t0);
+        o.stop(t0 + dur);
+      } catch (e) {}
+    }
+    function sonidoPateo() { beep(200, 0.08, 'square'); }
+    function sonidoGol() { beep(660, 0.18, 'square'); beep(880, 0.3, 'square', 0.15); }
+    function sonidoRival() { beep(330, 0.18, 'square'); beep(440, 0.3, 'square', 0.15); }
+    function sonidoBote() { beep(120, 0.05, 'triangle'); }
+
+    const pantallas = {
+      inicio: $('pantalla-inicio'),
+      juego: $('pantalla-juego'),
+      fin: $('pantalla-fin')
+    };
+    function mostrarPantalla(nombre) {
+      Object.keys(pantallas).forEach(function (k) {
+        pantallas[k].classList.toggle('activo', k === nombre);
+      });
+    }
+
+    const aviso = $('aviso');
+    const avisoTexto = $('aviso-texto');
+    function mostrarAviso(texto, esGol) {
+      avisoTexto.textContent = texto;
+      avisoTexto.className = 'aviso-texto ' + (esGol ? 'gol' : 'rival');
+      aviso.classList.add('mostrar');
+    }
+    function ocultarAviso() {
+      aviso.classList.remove('mostrar');
+    }
+
+    function dibujarCancha() {
+      const g = ctx.createLinearGradient(0, 0, 0, H);
+      g.addColorStop(0, '#166534');
+      g.addColorStop(0.6, '#14532D');
+      g.addColorStop(1, '#0F3D23');
+      ctx.fillStyle = g;
+      ctx.fillRect(0, 0, W, H);
+
+      ctx.fillStyle = 'rgba(255,255,255,0.025)';
+      for (let x = 0; x < W; x += 90) {
+        if ((x / 90) % 2 === 0) ctx.fillRect(x, 0, 90, H);
+      }
+
+      ctx.strokeStyle = 'rgba(248,250,252,0.35)';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(10, 10, W - 20, H - 20);
+      ctx.beginPath();
+      ctx.moveTo(W / 2, 10);
+      ctx.lineTo(W / 2, H - 10);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(W / 2, H / 2, 50, 0, Math.PI * 2);
+      ctx.stroke();
+
+      ctx.strokeStyle = 'rgba(248,250,252,0.25)';
+      ctx.strokeRect(10, TOP - 90, 120, (BOT - TOP) + 180);
+      ctx.strokeRect(W - 130, TOP - 90, 120, (BOT - TOP) + 180);
+    }
+
+    function dibujarArco(x, esIzq) {
+      ctx.strokeStyle = 'rgba(248,250,252,0.25)';
+      ctx.lineWidth = 1.5;
+      for (let gy = TOP; gy <= BOT; gy += 13) {
+        ctx.beginPath();
+        if (esIzq) { ctx.moveTo(x - 16, gy); ctx.lineTo(x, gy); }
+        else { ctx.moveTo(x, gy); ctx.lineTo(x + 16, gy); }
+        ctx.stroke();
+      }
+      for (let gx = 0; gx <= 16; gx += 13) {
+        ctx.beginPath();
+        if (esIzq) { ctx.moveTo(x - gx, TOP); ctx.lineTo(x - gx, BOT); }
+        else { ctx.moveTo(x + gx, TOP); ctx.lineTo(x + gx, BOT); }
+        ctx.stroke();
+      }
+      ctx.strokeStyle = '#F8FAFC';
+      ctx.lineWidth = 4;
+      ctx.lineCap = 'round';
+      ctx.beginPath(); ctx.moveTo(x, TOP); ctx.lineTo(x, BOT); ctx.stroke();
+      ctx.fillStyle = '#F8FAFC';
+      [TOP, BOT].forEach(function (py) {
+        ctx.beginPath(); ctx.arc(x, py, 5, 0, Math.PI * 2); ctx.fill();
+      });
+    }
+
+    function dibujarBolaPersonaje(b, coloresBola, mirandoX, mirandoY) {
+      const dirX = mirandoX === undefined ? -1 : mirandoX;
+      const dirY = mirandoY || 0;
+      const mag = hip(dirX, dirY) || 1;
+      const dx = dirX / mag, dy = dirY / mag;
+      const px = -dy, py = dx;
+
+      ctx.fillStyle = 'rgba(0,0,0,0.35)';
+      ctx.beginPath();
+      ctx.ellipse(b.x, b.y + b.r * 0.85, b.r * 0.9, b.r * 0.35, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      const g = ctx.createRadialGradient(b.x - 5, b.y - 6, 2, b.x, b.y, b.r);
+      g.addColorStop(0, coloresBola.primario);
+      g.addColorStop(1, coloresBola.secundario);
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(0,0,0,0.4)';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      ctx.fillStyle = 'rgba(255,255,255,0.25)';
+      ctx.beginPath();
+      ctx.arc(b.x - 6, b.y - 7, b.r * 0.35, 0, Math.PI * 2);
+      ctx.fill();
+
+      const ex1 = b.x + dx * 5 + px * 5.5;
+      const ey1 = b.y + dy * 5 + py * 5.5;
+      const ex2 = b.x + dx * 5 - px * 5.5;
+      const ey2 = b.y + dy * 5 - py * 5.5;
+      ctx.fillStyle = '#FFFFFF';
+      ctx.beginPath(); ctx.arc(ex1, ey1, 3.6, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.arc(ex2, ey2, 3.6, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#0F172A';
+      ctx.beginPath(); ctx.arc(ex1 + dx * 1.4, ey1 + dy * 1.4, 1.8, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.arc(ex2 + dx * 1.4, ey2 + dy * 1.4, 1.8, 0, Math.PI * 2); ctx.fill();
+
+      ctx.strokeStyle = '#0F172A';
+      ctx.lineWidth = 1.4;
+      ctx.beginPath();
+      ctx.arc(b.x + dx * 4, b.y + dy * 7 + 2, 3.4, 0.15 * Math.PI, 0.85 * Math.PI);
+      ctx.stroke();
+    }
+
+    function dibujarBalon() {
+      const b = balon;
+      ctx.fillStyle = 'rgba(0,0,0,0.3)';
+      ctx.beginPath();
+      ctx.ellipse(b.x, b.y + b.r * 0.9, b.r * 0.9, b.r * 0.35, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#FFFFFF';
+      ctx.beginPath();
+      ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = '#1E293B';
+      ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2); ctx.stroke();
+      ctx.beginPath(); ctx.arc(b.x, b.y, b.r * 0.5, 0, Math.PI * 2); ctx.stroke();
+      ctx.fillStyle = '#1E293B';
+      ctx.beginPath(); ctx.arc(b.x, b.y, b.r * 0.26, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.arc(b.x - b.r * 0.55, b.y - b.r * 0.4, b.r * 0.2, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.arc(b.x + b.r * 0.55, b.y - b.r * 0.4, b.r * 0.2, 0, Math.PI * 2); ctx.fill();
+    }
+
+    function dibujar() {
+      dibujarCancha();
+      dibujarArco(PX1, true);
+      dibujarArco(PX2, false);
+      dibujarBalon();
+      dibujarBolaPersonaje(rival, colores.rival, -1, 0);
+      dibujarBolaPersonaje(jugador, colores.jugador, jugador.mirandoX, jugador.mirandoY);
+    }
+
+    function colisionarPostes(b) {
+      POSTS.forEach(function (p) {
+        const dx = b.x - p.x, dy = b.y - p.y;
+        const d = hip(dx, dy);
+        const min = b.r + 6;
+        if (d < min && d > 0) {
+          const nx = dx / d, ny = dy / d;
+          b.x = p.x + nx * min;
+          b.y = p.y + ny * min;
+          const prod = b.vx * nx + b.vy * ny;
+          if (prod < 0) {
+            b.vx -= 2 * prod * nx;
+            b.vy -= 2 * prod * ny;
+          }
+        }
+      });
+    }
+
+    function empujarBalon(a) {
+      const dx = balon.x - a.x, dy = balon.y - a.y;
+      const d = hip(dx, dy);
+      const min = a.r + balon.r;
+      if (d >= min || d === 0) return;
+      const nx = dx / d, ny = dy / d;
+      const solapamiento = min - d;
+      balon.x += nx * solapamiento;
+      balon.y += ny * solapamiento;
+      const rel = (a.vx - balon.vx) * nx + (a.vy - balon.vy) * ny;
+      if (rel > 0) {
+        balon.vx += nx * rel * 0.9;
+        balon.vy += ny * rel * 0.9;
+      }
+    }
+
+    function moverJugador(dt) {
+      jugador.vx = 0;
+      jugador.vy = 0;
+      if (teclas['ArrowLeft'])  jugador.vx -= VEL_JUGADOR;
+      if (teclas['ArrowRight']) jugador.vx += VEL_JUGADOR;
+      if (teclas['ArrowUp'])    jugador.vy -= VEL_JUGADOR;
+      if (teclas['ArrowDown'])  jugador.vy += VEL_JUGADOR;
+
+      if (jugador.vx !== 0 || jugador.vy !== 0) {
+        const mag = hip(jugador.vx, jugador.vy);
+        jugador.mirandoX = jugador.vx / mag;
+        jugador.mirandoY = jugador.vy / mag;
+      }
+
+      jugador.x = clamp(jugador.x + jugador.vx * dt, jugador.r + 10, W - jugador.r - 10);
+      jugador.y = clamp(jugador.y + jugador.vy * dt, jugador.r + 10, H - jugador.r - 10);
+      colisionarPostes(jugador);
+    }
+
+    function moverRival(dt) {
+      const aGol = { x: PX1, y: 240 };
+      const alBalonX = balon.x - aGol.x, alBalonY = balon.y - aGol.y;
+      const distABalon = hip(alBalonX, alBalonY) || 1;
+      const nx = alBalonX / distABalon, ny = alBalonY / distABalon;
+
+      const targetX = clamp(balon.x + nx * (rival.r + balon.r + 8), rival.r + 10, W - rival.r - 10);
+      const targetY = clamp(balon.y + ny * (rival.r + balon.r + 8), rival.r + 10, H - rival.r - 10);
+
+      const dx = targetX - rival.x, dy = targetY - rival.y;
+      const d = hip(dx, dy);
+      if (d > 2) {
+        rival.vx = (dx / d) * VEL_RIVAL;
+        rival.vy = (dy / d) * VEL_RIVAL;
+      } else {
+        rival.vx = 0;
+        rival.vy = 0;
+      }
+
+      rival.x = clamp(rival.x + rival.vx * dt, rival.r + 10, W - rival.r - 10);
+      rival.y = clamp(rival.y + rival.vy * dt, rival.r + 10, H - rival.r - 10);
+      colisionarPostes(rival);
+
+      const now = performance.now();
+      if (now - cooldownRival > 450) {
+        const dBalon = hip(balon.x - rival.x, balon.y - rival.y);
+        if (dBalon < 30) {
+          const objetivoY = TOP + 14 + Math.random() * (BOT - TOP - 28);
+          const dirX = PX1 - balon.x, dirY = objetivoY - balon.y;
+          const mag = hip(dirX, dirY) || 1;
+          const fuerza = 620 + Math.random() * 140;
+          balon.vx = (dirX / mag) * fuerza;
+          balon.vy = (dirY / mag) * fuerza;
+          cooldownRival = now;
+          sonidoPateo();
+        }
+      }
+    }
+
+    function patear() {
+      if (estado !== 'jugando') return;
+      const now = performance.now();
+      if (now - cooldownJugador < 350) return;
+      const d = hip(balon.x - jugador.x, balon.y - jugador.y);
+      if (d > jugador.r + balon.r + 26) return;
+      cooldownJugador = now;
+      balon.vx = jugador.mirandoX * FUERZA_PATEO;
+      balon.vy = jugador.mirandoY * FUERZA_PATEO;
+      sonidoPateo();
+    }
+
+    function resolverGol() {
+      if (balon.x < PX1 && balon.y > TOP && balon.y < BOT) {
+        marcador.riv++;
+        $('puntos-visita').textContent = marcador.riv;
+        mostrarAviso('¡GOOL DEL RIVAL!', false);
+        sonidoRival();
+        cooldownGol = performance.now();
+        estado = 'gol';
+      } else if (balon.x > PX2 && balon.y > TOP && balon.y < BOT) {
+        marcador.jug++;
+        $('puntos-local').textContent = marcador.jug;
+        mostrarAviso('¡GOOOL!', true);
+        sonidoGol();
+        cooldownGol = performance.now();
+        estado = 'gol';
+      }
+    }
+
+    function reiniciarJugada() {
+      ocultarAviso();
+      jugador.x = 250; jugador.y = 240; jugador.vx = 0; jugador.vy = 0;
+      rival.x = 650; rival.y = 240; rival.vx = 0; rival.vy = 0;
+      balon.x = 450; balon.y = 240; balon.vx = 0; balon.vy = 0;
+      estado = 'jugando';
+    }
+
+    function terminarPartido() {
+      estado = 'fin';
+      ocultarAviso();
+      const finEmoji = $('fin-emoji');
+      const finTitulo = $('fin-titulo');
+      const finSub = $('fin-sub');
+      if (marcador.jug > marcador.riv) {
+        finEmoji.textContent = '\u{1F3C6}';
+        finTitulo.textContent = '¡Victoria!';
+        finTitulo.className = 'fin-titulo campeon';
+        finSub.textContent = 'Ganaste el partido. ¡Qué jugada!';
+      } else if (marcador.jug < marcador.riv) {
+        finEmoji.textContent = '\u{1F614}';
+        finTitulo.textContent = 'Derrota';
+        finTitulo.className = 'fin-titulo derrota';
+        finSub.textContent = 'El rival fue mejor. ¡Revancha!';
+      } else {
+        finEmoji.textContent = '\u{1F91D}';
+        finTitulo.textContent = 'Empate';
+        finTitulo.className = 'fin-titulo empate';
+        finSub.textContent = 'Nadie se rindió. ¡Juega otra vez!';
+      }
+      $('fin-nombre-local').textContent = 'Mi bola';
+      $('fin-nombre-visita').textContent = 'Bola rival';
+      $('fin-pts-local').textContent = marcador.jug;
+      $('fin-pts-visita').textContent = marcador.riv;
+      mostrarPantalla('fin');
+
+      if (!statsGuardadas) {
+        statsGuardadas = true;
+        const ganado = marcador.jug > marcador.riv;
+        sumarStats({
+          partidos: 1,
+          goles: marcador.jug,
+          asistencias: 0,
+          convertidos: 0,
+          totales: 0,
+          puntaje: marcador.jug * 10 + (ganado ? 50 : 0),
+          nivel: 1
+        });
+      }
+    }
+
+    function actualizarTiempo() {
+      const total = Math.max(0, Math.ceil(tiempo));
+      const m = String(Math.floor(total / 60)).padStart(2, '0');
+      const s = String(total % 60).padStart(2, '0');
+      $('tiempo-txt').textContent = m + ':' + s;
+    }
+
+    function bucle(now) {
+      requestAnimationFrame(bucle);
+      if (!ultimoFrame) ultimoFrame = now;
+      const dt = Math.min(0.05, (now - ultimoFrame) / 1000);
+      ultimoFrame = now;
+
+      if (estado === 'jugando') {
+        tiempo -= dt;
+        actualizarTiempo();
+        if (tiempo <= 0) {
+          tiempo = 0;
+          actualizarTiempo();
+          terminarPartido();
+        } else {
+          moverJugador(dt);
+          moverRival(dt);
+          empujarBalon(jugador);
+          empujarBalon(rival);
+
+          const friccion = Math.pow(0.985, dt * 60);
+          balon.vx *= friccion;
+          balon.vy *= friccion;
+          balon.x += balon.vx * dt;
+          balon.y += balon.vy * dt;
+
+          colisionarPostes(balon);
+          resolverGol();
+
+          if (balon.x < balon.r) { balon.x = balon.r; balon.vx *= -0.7; sonidoBote(); }
+          if (balon.x > W - balon.r) { balon.x = W - balon.r; balon.vx *= -0.7; sonidoBote(); }
+          if (balon.y < balon.r) { balon.y = balon.r; balon.vy *= -0.7; sonidoBote(); }
+          if (balon.y > H - balon.r) { balon.y = H - balon.r; balon.vy *= -0.7; sonidoBote(); }
+        }
+      } else if (estado === 'gol') {
+        if (now - cooldownGol > 1400) {
+          reiniciarJugada();
+        }
+      }
+
+      dibujar();
+    }
+
+    function iniciarPartido() {
+      marcador = { jug: 0, riv: 0 };
+      tiempo = TIEMPO_PARTIDO;
+      statsGuardadas = false;
+      cooldownJugador = 0;
+      cooldownRival = 0;
+      $('puntos-local').textContent = 0;
+      $('puntos-visita').textContent = 0;
+      actualizarTiempo();
+      reiniciarJugada();
+      mostrarPantalla('juego');
+    }
+
+    document.addEventListener('keydown', function (e) {
+      if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].indexOf(e.key) !== -1) {
+        e.preventDefault();
+      }
+      teclas[e.key] = true;
+      if (e.key === 'x' || e.key === 'X') patear();
+    });
+    document.addEventListener('keyup', function (e) {
+      teclas[e.key] = false;
+    });
+
+    document.querySelectorAll('.dpad-btn').forEach(function (btn) {
+      const tecla = btn.getAttribute('data-tecla');
+      function on() { teclas[tecla] = true; }
+      function off() { teclas[tecla] = false; }
+      btn.addEventListener('pointerdown', on);
+      btn.addEventListener('pointerup', off);
+      btn.addEventListener('pointerleave', off);
+      btn.addEventListener('pointercancel', off);
+    });
+
+    $('btn-patada').addEventListener('pointerdown', function () { patear(); });
+    $('btn-patada').addEventListener('contextmenu', function (e) { e.preventDefault(); });
+    $('btn-comenzar').addEventListener('click', iniciarPartido);
+    $('btn-jugar-otra').addEventListener('click', iniciarPartido);
+
+    mostrarPantalla('inicio');
+    actualizarTiempo();
+    requestAnimationFrame(bucle);
+  </script>
+</body>
+</html>
