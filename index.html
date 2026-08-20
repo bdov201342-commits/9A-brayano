@@ -1,142 +1,402 @@
-<!DOCTYPE html>
-<html lang="en">
+!DOCTYPE html>
+<html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Mi Mundo del Fútbol - Inicio</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #001b12 0%, #003f2d 50%, #001a0d 100%);
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 30% 20%, rgba(0, 212, 98, 0.04) 0%, transparent 50%),
+        radial-gradient(ellipse at 70% 80%, rgba(255, 215, 0, 0.03) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .estrella {
+      position: fixed;
+      pointer-events: none;
+      z-index: 0;
+      color: rgba(255, 215, 0, 0.06);
+      font-size: 20px;
+      animation: destellar 3s ease-in-out infinite alternate;
+    }
+    .estrella:nth-child(1)  { top: 6%;  left: 8%;  animation-delay: 0s; }
+    .estrella:nth-child(2)  { top: 15%; left: 88%; animation-delay: 0.5s; font-size: 26px; }
+    .estrella:nth-child(3)  { top: 45%; left: 4%;  animation-delay: 1s; }
+    .estrella:nth-child(4)  { top: 80%; left: 90%; animation-delay: 1.5s; font-size: 24px; }
+    .estrella:nth-child(5)  { top: 90%; left: 20%; animation-delay: 2s; font-size: 16px; }
+    .estrella:nth-child(6)  { top: 30%; left: 60%; animation-delay: 1.2s; font-size: 14px; }
+
+    @keyframes destellar {
+      0%   { opacity: 0.2; transform: scale(1) rotate(0deg); }
+      100% { opacity: 1;   transform: scale(1.2) rotate(180deg); }
+    }
+
+    .main {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 30px 20px;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 520px;
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-radius: 28px;
+      padding: 40px 32px;
+      border: 1px solid rgba(0, 212, 98, 0.08);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+      text-align: center;
+      opacity: 0;
+      animation: subir 0.8s ease-out 0.2s forwards;
+    }
+
+    @keyframes subir {
+      0% { opacity: 0; transform: translateY(30px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    .escudo {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      font-size: 2.2rem;
+      background: linear-gradient(135deg, #00d462, #008f40);
+      box-shadow: 0 0 30px rgba(0, 212, 98, 0.25);
+      margin-bottom: 16px;
+      overflow: hidden;
+    }
+
+    .escudo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+
+    .titulo {
+      font-size: 1.9rem;
+      font-weight: 800;
+      color: #F8FAFC;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+    .titulo span {
+      color: #00d462;
+    }
+
+    .bienvenida {
+      color: rgba(255, 255, 255, 0.85);
+      font-size: 1.1rem;
+      margin: 10px 0 4px;
+    }
+    .bienvenida strong {
+      color: #00d462;
+      font-weight: 800;
+    }
+
+    .subtitulo {
+      color: rgba(255, 255, 255, 0.25);
+      font-size: 0.78rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 26px;
+    }
+
+    .parrafo {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .botones_1 {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 24px;
+    }
+
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 12px 22px;
+      background: linear-gradient(135deg, rgba(0, 212, 98, 0.12), rgba(0, 212, 98, 0.04));
+      border: 1px solid rgba(0, 212, 98, 0.15);
+      border-radius: 50px;
+      color: #F8FAFC;
+      font-family: inherit;
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+    .btn:hover {
+      background: linear-gradient(135deg, rgba(0, 212, 98, 0.2), rgba(0, 212, 98, 0.08));
+      border-color: rgba(0, 212, 98, 0.3);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 212, 98, 0.1);
+    }
+
+    .btn-principal {
+      background: linear-gradient(135deg, #00d462, #008f40);
+      color: #001b12;
+      box-shadow: 0 8px 25px rgba(0, 212, 98, 0.25);
+    }
+    .btn-principal:hover {
+      background: linear-gradient(135deg, #00d462, #008f40);
+      border-color: #00d462;
+      box-shadow: 0 12px 30px rgba(0, 212, 98, 0.35);
+    }
+
+    .btn-dorado {
+      border-color: rgba(255, 215, 0, 0.25);
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.08), rgba(255, 215, 0, 0.02));
+    }
+    .btn-dorado:hover {
+      background: rgba(255, 215, 0, 0.1);
+      border-color: rgba(255, 215, 0, 0.4);
+      box-shadow: 0 8px 25px rgba(255, 215, 0, 0.1);
+    }
+
+    /* Tabla de horario */
+    .Horario {
+      display: none;
+      margin-top: 16px;
+      text-align: left;
+      opacity: 0;
+      animation: subir 0.5s ease-out forwards;
+    }
+    .Horario.visible {
+      display: block;
+    }
+
+    .h-titulo {
+      color: #00d462;
+      font-size: 1rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      text-align: center;
+    }
+
+    .tabla {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      border-radius: 12px;
+      overflow: hidden;
+      font-size: 0.75rem;
+    }
+
+    .tabla th {
+      background: rgba(0, 212, 98, 0.15);
+      color: #00d462;
+      padding: 8px 6px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .tabla td {
+      background: rgba(255, 255, 255, 0.03);
+      color: rgba(255, 255, 255, 0.75);
+      padding: 7px 6px;
+      text-align: center;
+      border-bottom: 1px solid rgba(0, 212, 98, 0.06);
+    }
+
+    .tabla tr:last-child td {
+      border-bottom: none;
+    }
+
+    .tabla tr:hover td {
+      background: rgba(0, 212, 98, 0.06);
+    }
+
+    .footer {
+      margin-top: 24px;
+      color: rgba(255, 255, 255, 0.12);
+      font-size: 0.72rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+    .footer strong {
+      color: rgba(0, 212, 98, 0.4);
+    }
+  </style>
 </head>
 <body>
-  <header>
-    <div class="contenedor">
-      <h1 class="titulo">Portafolio</h1>
-    </div>  
-  </header>
-    <br>
-  <div class="Contenedor_principal">  
-    <div class="Contenedor_imagen">
-      <img src="foto-3.png" alt="Luisa">
-    </div>  
+  <div class="estrella">&#9733;</div>
+  <div class="estrella">&#9733;</div>
+  <div class="estrella">&#9733;</div>
+  <div class="estrella">&#9733;</div>
+  <div class="estrella">&#9733;</div>
+  <div class="estrella">&#9733;</div>
 
-    <div class="contenedor_parrafo">
-      <h1 class="p-nombre">BRAYAN OLMOS</h1>
-      <p class="parrafo">holasoy brayan kme gutsa mucho el futbol y ser sociable.</p>
+  <div class="main">
+    <div class="card">
+      <div class="escudo">&#9917;</div>
+      <h1 class="titulo">Mi Mundo <span>del Fútbol</span></h1>
+      <p class="bienvenida">¡Hola, <strong id="nombre">Hincha</strong>!</p>
+      <p class="subtitulo">Portafolio de Brayan</p>
 
-       <!-- Modificamos el contenedor de botones para enlazar el Botón 3 -->
-<div class="botones_1">
-    <button class="boton_1" id="btn-toggle">Boton 1</button>
-    <button class="boton_1" id="btn-color">Boton 2</button>
-    <!-- Envolvemos el botón en una etiqueta "a" apuntando al nuevo archivo -->
-    <a href="Registro.html"><button class="boton_1">Boton 3</button></a>
-</div>
-      
-        <!-- AQUÍ ESTABA EL ERROR -->
-        <div id="Horario" class="Horario">
+      <p class="parrafo">Hola soy Brayan, me gusta mucho el fútbol y ser sociable.</p>
 
-            <h1 class="h-titulo">Horario</h1>
+      <div class="botones_1">
+        <button class="btn" id="btn-toggle">Mi Perfil</button>
+        <button class="btn" id="btn-color">Cambiar Color</button>
+        <a href="Registro.html" class="btn btn-dorado">Registro</a>
+      </div>
 
-            <table class="tabla" id="tabla-clases" >
+      <div id="Horario" class="Horario">
+        <h2 class="h-titulo">Horario</h2>
+        <table class="tabla" id="tabla-clases">
+          <tr>
+            <th>Día 1</th>
+            <th>Día 2</th>
+            <th>Día 3</th>
+            <th>Día 4</th>
+            <th>Día 5</th>
+            <th>Día 6</th>
+            <th>Día 7</th>
+          </tr>
+          <tr>
+            <td>Biología</td>
+            <td>Edu. Física</td>
+            <td>Español</td>
+            <td>Francés</td>
+            <td>Biología</td>
+            <td>Edu. Física</td>
+            <td>Inglés</td>
+          </tr>
+          <tr>
+            <td>Matemáticas</td>
+            <td>Sociales</td>
+            <td>Sociales</td>
+            <td>Español</td>
+            <td>Matemáticas</td>
+            <td>Inglés</td>
+            <td>Sociales</td>
+          </tr>
+          <tr>
+            <td>Descanso</td>
+            <td>Descanso</td>
+            <td>Descanso</td>
+            <td>Descanso</td>
+            <td>Descanso</td>
+            <td>Descanso</td>
+            <td>Descanso</td>
+          </tr>
+          <tr>
+            <td>Español</td>
+            <td>Filosofía</td>
+            <td>Matemáticas</td>
+            <td>Informática</td>
+            <td>Inglés</td>
+            <td>Francés</td>
+            <td>Informática</td>
+          </tr>
+          <tr>
+            <td>Sociales</td>
+            <td>Matemáticas</td>
+            <td>Física</td>
+            <td>Inglés</td>
+            <td>Sociales</td>
+            <td>Matemáticas</td>
+            <td>Química</td>
+          </tr>
+          <tr>
+            <td>Francés</td>
+            <td>SKILLS</td>
+            <td>Danzas</td>
+            <td>Ética</td>
+            <td>Dibujo</td>
+            <td>Sociales</td>
+            <td>Biología</td>
+          </tr>
+          <tr>
+            <td>Cátedra</td>
+            <td>Español</td>
+            <td>PILEO</td>
+            <td>Dibujo</td>
+            <td>PILEO</td>
+            <td>Español</td>
+            <td>Inglés</td>
+          </tr>
+          <tr>
+            <td>Inglés</td>
+            <td>Inglés</td>
+            <td>Biología</td>
+            <td>Matemáticas</td>
+            <td>Danzas</td>
+            <td>Informática</td>
+            <td>Matemáticas</td>
+          </tr>
+        </table>
+      </div>
 
-                <tr>
-                    <th>Día 1</th>
-                    <th>Día 2</th>
-                    <th>Día 3</th>
-                    <th>Día 4</th>
-                    <th>Día 5</th>
-                    <th>Día 6</th>
-                    <th>Día 7</th>
-                </tr>
+      <a href="menu.html" class="btn btn-principal" style="margin-top: 12px;">&#128200; Ir al Menú</a>
 
-                <tr>
-                    <td>Biología</td>
-                    <td>Edu. Física</td>
-                    <td>Español</td>
-                    <td>Francés</td>
-                    <td>Biología</td>
-                    <td>Edu. Física</td>
-                    <td>Inglés</td>
-                </tr>
-
-                <tr>
-                    <td>Matemáticas</td>
-                    <td>Sociales</td>
-                    <td>Sociales</td>
-                    <td>Español</td>
-                    <td>Matemáticas</td>
-                    <td>Inglés</td>
-                    <td>Sociales</td>
-                </tr>
-
-                <tr>
-                    <td>Descanso</td>
-                    <td>Descanso</td>
-                    <td>Descanso</td>
-                    <td>Descanso</td>
-                    <td>Descanso</td>
-                    <td>Descanso</td>
-                    <td>Descanso</td>
-                </tr>
-
-                <tr>
-                    <td>Español</td>
-                    <td>Filosofía</td>
-                    <td>Matemáticas</td>
-                    <td>Informática</td>
-                    <td>Inglés</td>
-                    <td>Francés</td>
-                    <td>Informática</td>
-                </tr>
-
-                <tr>
-                    <td>Sociales</td>
-                    <td>Matemáticas</td>
-                    <td>Física</td>
-                    <td>Inglés</td>
-                    <td>Sociales</td>
-                    <td>Matemáticas</td>
-                    <td>Química</td>
-                </tr>
-
-                <tr>
-                    <td>Francés</td>
-                    <td>SKILLS</td>
-                    <td>Danzas</td>
-                    <td>Ética</td>
-                    <td>Dibujo</td>
-                    <td>Sociales</td>
-                    <td>Biología</td>
-                </tr>
-
-                <tr>
-                    <td>Cátedra</td>
-                    <td>Español</td>
-                    <td>PILEO</td>
-                    <td>Dibujo</td>
-                    <td>PILEO</td>
-                    <td>Español</td>
-                    <td>Inglés</td>
-                </tr>
-
-                <tr>
-                    <td>Inglés</td>
-                    <td>Inglés</td>
-                    <td>Biología</td>
-                    <td>Matemáticas</td>
-                    <td>Danzas</td>
-                    <td>Informática</td>
-                    <td>Matemáticas</td>
-                </tr>
-
-            </table>
-
-        </div>
-
+      <p class="footer"><strong>#VamosVerde</strong> &middot; Orgullo verdolaga</p>
     </div>
+  </div>
 
-</div>
+  <script>
+    const usuario = localStorage.getItem('usuario');
+    document.getElementById('nombre').textContent = usuario ? usuario : 'Hincha';
 
-<!-- El script siempre al final -->
-<script src="script.js"></script>
+    const btnToggle = document.getElementById('btn-toggle');
+    const horario = document.getElementById('Horario');
+    btnToggle.addEventListener('click', function () {
+      horario.classList.toggle('visible');
+      btnToggle.textContent = horario.classList.contains('visible') ? 'Ocultar' : 'Mi Perfil';
+    });
 
+    const btnColor = document.getElementById('btn-color');
+    let colores = ['#00d462', '#ffd700', '#00b4d8', '#ff6b6b', '#a855f7'];
+    let idx = 0;
+    btnColor.addEventListener('click', function () {
+      idx = (idx + 1) % colores.length;
+      document.querySelectorAll('.titulo span, .bienvenida strong, .h-titulo, .escudo').forEach(function (el) {
+        el.style.color = colores[idx];
+      });
+      document.querySelector('.escudo').style.background = 'linear-gradient(135deg, ' + colores[idx] + ', ' + colores[(idx + 1) % colores.length] + ')';
+    });
+  </script>
 </body>
 </html>
